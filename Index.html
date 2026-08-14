@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Special Surprise! 🎂</title>
+    <style>
+        :root {
+            --primary: #ff3366;
+            --accent: #ffbe0b;
+            --bg-dark: #0d0118;
+            --card-glass: rgba(255, 255, 255, 0.08);
+            --text-light: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 20%, #2b0845 0%, #0d0118 70%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 380px;
+            perspective: 1000px;
+            z-index: 10;
+        }
+
+        /* 3D Card Flip Mechanism */
+        .card-3d {
+            width: 100%;
+            height: 480px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .card-3d.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 28px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Front Side */
+        .card-front {
+            border-top: 2px solid var(--primary);
+        }
+
+        .avatar-box {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: white;
+        }
+
+        .title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff758c, #ff7eb3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .flip-hint {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Back Side */
+        .card-back {
+            transform: rotateY(180deg);
+            border-top: 2px solid var(--accent);
+        }
+
+        .note-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            margin-top: 15px;
+        }
+
+        .interactive-btn {
+            background: linear-gradient(45deg, var(--primary), #7000ff);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
+            width: 100%;
+        }
+
+        /* Background Bubbles */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            animation: floatUp 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="mobile-container">
+        <div class="card-3d" id="card" onclick="flipCard()">
+            
+            <!-- Front Face -->
+            <div class="card-face card-front">
+                <div class="avatar-box">
+                    <!-- Updated image source to Pocoyo cheering -->
+                    <img src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTn4ggIKMAwg3S_HeNPq_9ckPVPPtw-NKoFSz8V_v3c99byFsk5hW_deHfzYSxPU5LDMB_EFxV-PI9GSFI" alt="Pocoyo Cheering">
+                </div>
+                <div>
+                    <h1 class="title">Happy Birthday! ✨</h1>
+                    <p style="color: #aaa; font-size: 0.85rem; margin-top: 5px;">A secret note is waiting for you...</p>
+                </div>
+                <div class="flip-hint">👆 Tap Card to Flip</div>
+            </div>
+
+            <!-- Back Face -->
+            <div class="card-face card-back">
+                <div>
+                    <h2 style="color: var(--accent); margin-bottom: 10px;">🌟 To an Amazing Friend</h2>
+                    <p class="note-text">
+                        Wishing you a year filled with love, laughter, success, and endless joy. Thank you for always bringing brightness and positivity into everyone's life!
+                    </p>
+                </div>
+                <button class="interactive-btn" onclick="triggerParty(event)">🎉 Launch Party Mode!</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 3D Flip Logic
+        function flipCard() {
+            const card = document.getElementById('card');
+            card.classList.toggle('flipped');
+            playTone(440, 0.1); // Sound effect on flip
+        }
+
+        // Web Audio Synth for Custom Sound Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, duration) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // Party Confetti & Audio Effects
+        function triggerParty(e) {
+            e.stopPropagation(); // Prevents card from flipping back when clicking button
+            
+            // Play upbeat chime sequence
+            playTone(523.25, 0.1); // C5
+            setTimeout(() => playTone(659.25, 0.1), 100); // E5
+            setTimeout(() => playTone(783.99, 0.2), 200); // G5
+
+            // Pop particles
+            for(let i = 0; i < 60; i++) {
+                particles.push({
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    vx: (Math.random() - 0.5) * 16,
+                    vy: (Math.random() - 0.5) * 16 - 4,
+                    size: Math.random() * 8 + 4,
+                    color: `hsl(${Math.random() * 360}, 100%, 65%)`,
+                    life: 100
+                });
+            }
+        }
+
+        // Background Glass Bubbles Generator
+        for (let i = 0; i < 12; i++) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            const size = Math.random() * 60 + 20;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${Math.random() * 100}vw`;
+            bubble.style.animationDuration = `${Math.random() * 5 + 5}s`;
+            bubble.style.animationDelay = `${Math.random() * 3}s`;
+            document.body.appendChild(bubble);
+        }
+
+        // Particle Canvas Animation
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function renderParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2; // Gravity effect
+                p.life -= 1.5;
+
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (p.life <= 0) particles.splice(index, 1);
+            });
+            requestAnimationFrame(renderParticles);
+        }
+        renderParticles();
+    </script>
+</body>
+</html>
